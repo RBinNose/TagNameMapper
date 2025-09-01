@@ -1,0 +1,38 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="TagNameMapper.Views.MainWindow"
+        Icon="/Assets/avalonia-logo.ico">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="*"/>
+             <ColumnDefinition Width="100"/>
+        </Grid.ColumnDefinitions>
+        
+        <!-- 左侧TreeView显示TagGroup -->
+        <TreeView Grid.Column="0" ItemsSource="{Binding TagGroups}" Margin="10">
+            <TreeView.ItemTemplate>
+                <TreeDataTemplate ItemsSource="{Binding ChildGroups}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Name}" Margin="5,0"/>
+                        <TextBlock Text="{Binding GroupType}" Foreground="Gray" Margin="5,0"/>
+                    </StackPanel>
+                </TreeDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
+        
+        <!-- 右侧预留空间 -->
+        <Border Grid.Column="1" Background="LightGray" Margin="1">
+            <TextBlock Text="右侧内容区域" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </Border>
+        <StackPanel Grid.Column="2">
+            <Button Content="{Binding Message}" Command="{Binding LoadDataCommand}" Margin="1" Height="100" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+            <TextBox Text="{Binding Message}" Margin="1" Height="100" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+        </StackPanel>
+    </Grid>
+
+</Window>
