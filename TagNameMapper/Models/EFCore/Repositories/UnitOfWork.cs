@@ -17,10 +17,7 @@ public class UnitOfWork : IUnitOfWork
     private readonly ITagRepository _tagRepository;
     private readonly ITagGroupRepository _tagGroupRepository;
 
-    public UnitOfWork(
-        TagNameMapperDbContext context,
-        ITagRepository tagRepository,
-        ITagGroupRepository tagGroupRepository)
+    public UnitOfWork(TagNameMapperDbContext context,ITagRepository tagRepository,ITagGroupRepository tagGroupRepository)
     {
         _context = context ?? throw new ArgumentNullException(nameof(context));
         _tagRepository = tagRepository ?? throw new ArgumentNullException(nameof(tagRepository));

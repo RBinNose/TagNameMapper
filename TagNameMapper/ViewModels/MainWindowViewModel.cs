@@ -15,6 +15,9 @@ public partial class MainWindowViewModel : ObservableObject
 {
     private readonly IUnitOfWork _unitOfWork;
 
+    [ObservableProperty]
+    private ObservableCollection<TagGroup> _tagGroups = new();
+
 
 
     public MainWindowViewModel(IUnitOfWork unitOfWork)
@@ -29,28 +32,32 @@ public partial class MainWindowViewModel : ObservableObject
 
     }
 
-    //测试属性
-    [ObservableProperty]
-    private string _message = "Hello World!";
+     public async Task LoadTagGroupsAsync()
+    {
+        try
+        {
+            // 获取所有根节点（ParentGroupId 为 null 的节点）
+            var rootGroups = await _unitOfWork.TagGroups.GetRootGroupsAsync();
+            
+            TagGroups.Clear();
+            foreach (var group in rootGroups)
+            {
+                TagGroups.Add(group);
+            }
+        }
+        catch (Exception ex)
+        {
+            // 处理异常
+            Console.WriteLine($"加载 TagGroups 失败: {ex.Message}");
+        }
+    }
 
     // 异步命令
     [RelayCommand]
     private async Task LoadDataAsync()
     {
-        try
-        {
-            // 测试数据库连接和UnitOfWork
-            var tagGroups = await _unitOfWork.TagGroups.GetAllAsync();
-            Console.WriteLine($"✅ 数据库连接成功，找到 {tagGroups.Count()} 个TagGroup");
-            
-            var tags = await _unitOfWork.Tags.GetAllAsync();
-            Console.WriteLine($"✅ 找到 {tags.Count()} 个Tag");
-            
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"❌ 数据加载失败: {ex.Message}");
-        }
+        await LoadTagGroupsAsync();
+
     }
 
     /// <summary>
@@ -78,7 +85,6 @@ public partial class MainWindowViewModel : ObservableObject
             {
                 Name = "测试标签_" + DateTime.Now.ToString("HHmmss"),
                 Address = "PLC.Test" + DateTime.Now.ToString("HHmmss"),
-                TagGroupId = testGroup.Id
             };
             
             await _unitOfWork.Tags.AddAsync(testTag);

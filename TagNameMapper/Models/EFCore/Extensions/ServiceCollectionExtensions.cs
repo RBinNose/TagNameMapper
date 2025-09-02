@@ -98,17 +98,31 @@ public static class ServiceCollectionExtensions
         {
             Name = "PLC变量",
             GroupType = Enums.TagGroupType.Folder,
-            ParentGroupId = null,
+            ParentGroupId = rootGroup.Id,
         };
 
         var hmiGroup = new TagGroup
         {
             Name = "HMI变量",
             GroupType = Enums.TagGroupType.Folder,
-            ParentGroupId = null,
+            ParentGroupId =  rootGroup.Id,
         };
 
-        context.TagGroups.AddRange(plcGroup, hmiGroup);
+        var plctest1 = new TagGroup
+        {
+            Name = "plctest1",
+            GroupType = Enums.TagGroupType.Folder,
+            ParentGroupId = plcGroup.Id,
+        };
+
+        var plctest1v1 = new TagGroup
+        {
+            Name = "plctest1v1",
+            GroupType = Enums.TagGroupType.TagTable,
+            ParentGroupId = plctest1.Id,
+        };
+
+        context.TagGroups.AddRange(plcGroup, hmiGroup, plctest1, plctest1v1);
 
         await context.SaveChangesAsync();
     }

@@ -29,11 +29,14 @@ public class TagGroupRepository : Repository<TagGroup>, ITagGroupRepository
     {
         return await _dbSet
             .Where(g => g.ParentGroupId == null)
+            .Include(g => g.ChildGroups)
+            .ThenInclude(c => c.ChildGroups)
+            .ThenInclude(c => c.ChildGroups)
             .OrderBy(g => g.Name)
             .ToListAsync();
     }
 
-    public async Task<IEnumerable<TagGroup>> GetChildGroupsAsync(int parentId)
+    public async Task<IEnumerable<TagGroup>> GetChildGroupsAsync(Guid parentId)
     {
         return await _dbSet
             .Where(g => g.ParentGroupId == parentId)
@@ -41,10 +44,10 @@ public class TagGroupRepository : Repository<TagGroup>, ITagGroupRepository
             .ToListAsync();
     }
 
-    public async Task<IEnumerable<TagGroup>> GetDescendantGroupsAsync(int parentId)
+    public async Task<IEnumerable<TagGroup>> GetDescendantGroupsAsync(Guid parentId)
     {
         var descendants = new List<TagGroup>();
-        var queue = new Queue<int>();
+        var queue = new Queue<Guid>();
         queue.Enqueue(parentId);
 
         while (queue.Count > 0)
@@ -64,7 +67,7 @@ public class TagGroupRepository : Repository<TagGroup>, ITagGroupRepository
         return descendants.OrderBy(g => g.Name);
     }
 
-    public async Task<IEnumerable<TagGroup>> GetAncestorGroupsAsync(int groupId)
+    public async Task<IEnumerable<TagGroup>> GetAncestorGroupsAsync(Guid groupId)
     {
         var ancestors = new List<TagGroup>();
         var currentGroup = await _dbSet.FindAsync(groupId);
@@ -108,7 +111,7 @@ public class TagGroupRepository : Repository<TagGroup>, ITagGroupRepository
 
     #region TagGroup 特定操作
 
-    public async Task<bool> MoveToParentAsync(int groupId, int? newParentId)
+    public async Task<bool> MoveToParentAsync(Guid groupId, Guid? newParentId)
     {
         var group = await _dbSet.FindAsync(groupId);
         if (group == null)
@@ -130,7 +133,7 @@ public class TagGroupRepository : Repository<TagGroup>, ITagGroupRepository
         return true;
     }
 
-    public async Task<TagGroup?> CopyToParentAsync(int sourceGroupId, int? targetParentId, string? newName = null, 
+    public async Task<TagGroup?> CopyToParentAsync(Guid sourceGroupId, Guid? targetParentId, string? newName = null, 
         bool includeChildren = true, bool includeTags = true)
     {
         var sourceGroup = await _dbSet
@@ -201,7 +204,7 @@ public class TagGroupRepository : Repository<TagGroup>, ITagGroupRepository
         return newGroup;
     }
 
-    public async Task<bool> IsNameExistsInParentAsync(string name, int? parentId, int? excludeId = null)
+    public async Task<bool> IsNameExistsInParentAsync(string name, Guid? parentId, Guid? excludeId = null)
     {
         var query = _dbSet.Where(g => g.Name == name && g.ParentGroupId == parentId);
         if (excludeId.HasValue)
@@ -211,7 +214,7 @@ public class TagGroupRepository : Repository<TagGroup>, ITagGroupRepository
         return await query.AnyAsync();
     }
 
-    public async Task<bool> CanMoveToParentAsync(int groupId, int? targetParentId)
+    public async Task<bool> CanMoveToParentAsync(Guid groupId, Guid? targetParentId)
     {
         if (!targetParentId.HasValue)
             return true; // 移动到根级别总是可以的
@@ -221,7 +224,7 @@ public class TagGroupRepository : Repository<TagGroup>, ITagGroupRepository
         return !descendants.Any(d => d.Id == targetParentId.Value);
     }
 
-    public async Task<TagGroup?> GetWithFullInfoAsync(int id)
+    public async Task<TagGroup?> GetWithFullInfoAsync(Guid id)
     {
         return await _dbSet
             .Include(g => g.ParentGroup)
@@ -230,7 +233,7 @@ public class TagGroupRepository : Repository<TagGroup>, ITagGroupRepository
             .FirstOrDefaultAsync(g => g.Id == id);
     }
 
-    public async Task<int> GetTotalTagCountAsync(int groupId)
+    public async Task<int> GetTotalTagCountAsync(Guid groupId)
     {
         var group = await _dbSet
             .Include(g => g.Tags)
@@ -257,7 +260,7 @@ public class TagGroupRepository : Repository<TagGroup>, ITagGroupRepository
         return directTagCount + descendantTagCount;
     }
 
-    public async Task<bool> DeleteWithChildrenAsync(int groupId, bool deleteChildGroups = true, bool deleteTags = false)
+    public async Task<bool> DeleteWithChildrenAsync(Guid groupId, bool deleteChildGroups = true, bool deleteTags = false)
     {
         var group = await GetWithFullInfoAsync(groupId);
         if (group == null)

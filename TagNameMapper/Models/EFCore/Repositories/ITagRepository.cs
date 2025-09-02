@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using TagNameMapper.Models.TableMetadatas;
 using TagNameMapper.Enums;
+using System;
 
 namespace TagNameMapper.Models.EFCore.Repositories;
 
@@ -24,7 +25,7 @@ public interface ITagRepository : IRepository<Tag>
     /// </summary>
     /// <param name="groupId">组 ID</param>
     /// <returns>该组下的所有 Tag</returns>
-    Task<IEnumerable<Tag>> GetByGroupIdAsync(int groupId);
+    Task<IEnumerable<Tag>> GetByGroupIdAsync(Guid groupId);
     
     
     
@@ -46,7 +47,7 @@ public interface ITagRepository : IRepository<Tag>
     /// <param name="tagId">Tag ID</param>
     /// <param name="newTagTableId">新TagTable ID，组类型必须是TagTable</param>
     /// <returns>是否移动成功</returns>
-    Task<bool> MoveToTagTableAsync(int tagId, int? newTagTableId);
+    Task<bool> MoveToTagTableAsync(Guid tagId, Guid? newTagTableId);
     
     /// <summary>
     /// 批量将 Tag 移动到指定TagTable
@@ -54,7 +55,7 @@ public interface ITagRepository : IRepository<Tag>
     /// <param name="tagIds">Tag ID 集合</param>
     /// <param name="newTagTableId">新TagTable ID，组类型必须是TagTable</param>
     /// <returns>成功移动的 Tag 数量</returns>
-    Task<int> MoveTagsToTagTableAsync(IEnumerable<int> tagIds, int? newTagTableId);
+    Task<int> MoveTagsToTagTableAsync(IEnumerable<Guid> tagIds, Guid? newTagTableId);
     
     /// <summary>
     /// 复制 Tag 到指定组，新Tag名称为“Copy of [原名称+_Count]”
@@ -62,7 +63,7 @@ public interface ITagRepository : IRepository<Tag>
     /// <param name="sourceTagId">源 Tag ID</param>
     /// <param name="targetTagTableId">目标组 ID</param>
     /// <returns>复制后的新 Tag</returns>
-    Task<Tag?> CopyToTagTableAsync(int sourceTagId, int? targetTagTableId);
+    Task<Tag?> CopyToTagTableAsync(Guid sourceTagId, Guid? targetTagTableId);
     
     /// <summary>
     /// 检查 Tag 名称是否已存在
@@ -70,21 +71,21 @@ public interface ITagRepository : IRepository<Tag>
     /// <param name="name">Tag 名称</param>
     /// <param name="excludeId">排除的 Tag ID（用于更新时检查）</param>
     /// <returns>是否已存在</returns>
-    Task<bool> IsNameExistsAsync(string name, int? excludeId = null);
+    Task<bool> IsNameExistsAsync(string name, Guid? excludeId = null);
     
     /// <summary>
     /// 获取 Tag 的完整信息（包含关联的组信息）
     /// </summary>
     /// <param name="id">Tag ID</param>
     /// <returns>包含组信息的 Tag</returns>
-    Task<Tag?> GetWithGroupAsync(int id);
+    Task<Tag?> GetWithGroupAsync(Guid id);
     
     /// <summary>
     /// 批量获取 Tag 的完整信息（包含关联的组信息）
     /// </summary>
     /// <param name="ids">Tag ID 集合</param>
     /// <returns>包含组信息的 Tag 集合</returns>
-    Task<IEnumerable<Tag>> GetWithGroupAsync(IEnumerable<int> ids);
+    Task<IEnumerable<Tag>> GetWithGroupAsync(IEnumerable<Guid> ids);
     
     #endregion
 }

@@ -15,6 +15,7 @@
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="11.3.4" />
     <PackageReference Include="Avalonia.Desktop" Version="11.3.4" />
+    <PackageReference Include="Avalonia.Xaml.Behaviors" Version="11.3.0.6" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
     <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.4" />
     <PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.4" />
@@ -32,6 +33,11 @@
     <CopyToOutputDirectory>Always</CopyToOutputDirectory>
   </None>
 </ItemGroup>
+ <ItemGroup>
+    <AvaloniaResource Include="Images\变量图标.png" />
+    <AvaloniaResource Include="Images\变量表图标.png" />
+    <AvaloniaResource Include="Images\文件夹图标.png" />
+  </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\" />
     <Folder Include="Models\EFCore\DbContexts\" />

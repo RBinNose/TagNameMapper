@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -13,14 +14,14 @@ public partial class TagGroup : ObservableObject
 {
     [ObservableProperty]
     [property: Key]
-    private int _id;
+    private Guid _id = Guid.NewGuid(); // 默认生成新GUID
 
     [ObservableProperty]
     [property: Required(ErrorMessage = "Group Name is required")]
     private string _name = string.Empty;
 
     [ObservableProperty]
-    private int? _parentGroupId;
+    private Guid? _parentGroupId;
 
     [ObservableProperty]
     private TagGroupType _groupType;
@@ -29,7 +30,7 @@ public partial class TagGroup : ObservableObject
     [ForeignKey("ParentGroupId")]
     public virtual TagGroup? ParentGroup { get; set; }
 
-    public virtual ICollection<TagGroup> ChildGroups { get; set; } = new List<TagGroup>();
+    public virtual ObservableCollection<TagGroup> ChildGroups { get; set; } = new();
 
     public virtual ICollection<Tag> Tags { get; set; } = new List<Tag>();
 

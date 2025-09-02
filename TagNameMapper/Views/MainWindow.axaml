@@ -4,8 +4,38 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="TagNameMapper.Views.MainWindow"
-        Icon="/Assets/avalonia-logo.ico">
+        Icon="/Assets/avalonia-logo.ico" >
 
+    <!--<Window.Resources>
+        <imaging:Bitmap x:Key="FolderIcon" Source="avares://Images/文件夹图标.png"/>
+        <imaging:Bitmap x:Key="TableIcon" Source="avares://Images/变量表图标.png"/>
+    </Window.Resources>-->
+    <Window.Styles>
+        <Style Selector="TreeViewItem">
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="MinHeight" Value="20"/>
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="Background" Value="#C0C0C0"/>
+        </Style>
+          <!-- 悬停样式 - 使用更具体的选择器 -->
+    <Style Selector="TreeView TreeViewItem:pointerover">
+        <Setter Property="Background" Value="LightBlue"/>
+    </Style>
+    
+    <!-- 选中样式 -->
+    <Style Selector="TreeView TreeViewItem:selected">
+        <Setter Property="Background" Value="CornflowerBlue"/>
+    </Style>
+    
+    <!-- 选中且悬停 -->
+    <Style Selector="TreeView TreeViewItem:selected:pointerover">
+        <Setter Property="Background" Value="DarkBlue"/>
+    </Style>
+    </Window.Styles>
+     <Window.Resources>
+        <Bitmap x:Key="FolderIcon">avares://TagNameMapper/Images/文件夹图标.png</Bitmap>
+        <Bitmap x:Key="TableIcon">avares://TagNameMapper/Images/变量表图标.png</Bitmap>
+    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="300"/>
@@ -14,12 +44,21 @@
         </Grid.ColumnDefinitions>
         
         <!-- 左侧TreeView显示TagGroup -->
-        <TreeView Grid.Column="0" ItemsSource="{Binding TagGroups}" Margin="10">
+        <TreeView Grid.Column="0" ItemsSource="{Binding TagGroups}" Margin="1" >
             <TreeView.ItemTemplate>
                 <TreeDataTemplate ItemsSource="{Binding ChildGroups}">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding Name}" Margin="5,0"/>
-                        <TextBlock Text="{Binding GroupType}" Foreground="Gray" Margin="5,0"/>
+                    <StackPanel Orientation="Horizontal" Height="20">
+                        <Image Margin="1,1,5,1">
+                            <Interaction.Behaviors>
+                                <DataTriggerBehavior Binding="{Binding GroupType}" ComparisonCondition="LessThanOrEqual" Value="1">
+                                    <ChangePropertyAction PropertyName="Source" Value="{StaticResource FolderIcon}" />
+                                </DataTriggerBehavior>
+                                <DataTriggerBehavior Binding="{Binding GroupType}" ComparisonCondition="GreaterThan" Value="1">
+                                    <ChangePropertyAction PropertyName="Source" Value="{StaticResource TableIcon}" />
+                                </DataTriggerBehavior>
+                            </Interaction.Behaviors>
+                        </Image>
+                        <TextBlock Text="{Binding Name}" HorizontalAlignment="Left" VerticalAlignment="Center" />
                     </StackPanel>
                 </TreeDataTemplate>
             </TreeView.ItemTemplate>
@@ -30,8 +69,8 @@
             <TextBlock Text="右侧内容区域" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </Border>
         <StackPanel Grid.Column="2">
-            <Button Content="{Binding Message}" Command="{Binding LoadDataCommand}" Margin="1" Height="100" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
-            <TextBox Text="{Binding Message}" Margin="1" Height="100" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+            <Button Content="test" Command="{Binding LoadDataCommand}" Margin="1" Height="100" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+          
         </StackPanel>
     </Grid>
 

@@ -25,7 +25,7 @@ public class TagRepository : Repository<Tag>, ITagRepository
         return await _dbSet.FirstOrDefaultAsync(t => t.Name == name);
     }
 
-    public async Task<IEnumerable<Tag>> GetByGroupIdAsync(int groupId)
+    public async Task<IEnumerable<Tag>> GetByGroupIdAsync(Guid groupId)
     {
         return await _dbSet
             .Where(t => t.TagGroupId == groupId)
@@ -50,7 +50,7 @@ public class TagRepository : Repository<Tag>, ITagRepository
 
     #region Tag 特定操作
 
-    public async Task<bool> MoveToTagTableAsync(int tagId, int? newGroupId)
+    public async Task<bool> MoveToTagTableAsync(Guid tagId, Guid? newGroupId)
     {
         var tag = await _dbSet.FindAsync(tagId);
         if (tag == null)
@@ -68,7 +68,7 @@ public class TagRepository : Repository<Tag>, ITagRepository
         return true;
     }
 
-    public async Task<int> MoveTagsToTagTableAsync(IEnumerable<int> tagIds, int? newGroupId)
+    public async Task<int> MoveTagsToTagTableAsync(IEnumerable<Guid> tagIds, Guid? newGroupId)
     {
         var tags = await _dbSet.Where(t => tagIds.Contains(t.Id)).ToListAsync();
         
@@ -88,12 +88,12 @@ public class TagRepository : Repository<Tag>, ITagRepository
         return tags.Count;
     }
 
-    public async Task<Tag?> CopyToTagTableAsync(int sourceTagId, int? targetGroupId)
+    public async Task<Tag?> CopyToTagTableAsync(Guid sourceTagId, Guid? targetGroupId)
     {
        return await Task.FromResult<Tag?>(null);
     }
 
-    public async Task<bool> IsNameExistsAsync(string name, int? excludeId = null)
+    public async Task<bool> IsNameExistsAsync(string name, Guid? excludeId = null)
     {
         var query = _dbSet.Where(t => t.Name == name);
         if (excludeId.HasValue)
@@ -103,14 +103,14 @@ public class TagRepository : Repository<Tag>, ITagRepository
         return await query.AnyAsync();
     }
 
-    public async Task<Tag?> GetWithGroupAsync(int id)
+    public async Task<Tag?> GetWithGroupAsync(Guid id)
     {
         return await _dbSet
             .Include(t => t.TagGroup)
             .FirstOrDefaultAsync(t => t.Id == id);
     }
 
-    public async Task<IEnumerable<Tag>> GetWithGroupAsync(IEnumerable<int> ids)
+    public async Task<IEnumerable<Tag>> GetWithGroupAsync(IEnumerable<Guid> ids)
     {
         return await _dbSet
             .Include(t => t.TagGroup)

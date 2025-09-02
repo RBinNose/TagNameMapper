@@ -11,7 +11,7 @@ namespace TagNameMapper.Models.TableMetadatas;
 public partial class Tag : ObservableObject
 {
     [ObservableProperty][property:Key]
-    private int _id;
+    private Guid _id = Guid.NewGuid(); // 默认生成新GUID
 
     [ObservableProperty][property:Required(ErrorMessage = "Tag Name is required")]
     private string _name = string.Empty;
@@ -39,7 +39,7 @@ public partial class Tag : ObservableObject
     private VariableAccessPermission _accessPermission;
 
     [ObservableProperty]
-    private int? _tagGroupId;
+    private Guid? _tagGroupId;
 
     [ObservableProperty]
     private int? _pollGroupId;
