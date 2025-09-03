@@ -73,7 +73,7 @@
         <Style Selector="TreeViewItem /template/ ToggleButton#PART_ExpandCollapseChevron:not(:checked) /template/ Path">
             <Setter Property="Data" Value="M 0 0 L 6 4 L 0 8 Z"/>
             <Setter Property="Fill" Value="Black"/>
-    </Style>
+        </Style>
     </Window.Styles>
      <Window.Resources>
         <Bitmap x:Key="FolderIcon">avares://TagNameMapper/Images/文件夹图标.png</Bitmap>

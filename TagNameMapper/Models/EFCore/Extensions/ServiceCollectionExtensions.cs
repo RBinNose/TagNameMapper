@@ -121,8 +121,26 @@ public static class ServiceCollectionExtensions
             GroupType = Enums.TagGroupType.TagTable,
             ParentGroupId = plctest1.Id,
         };
+        var plctest1F1 = new TagGroup
+        {
+            Name = "plctest1F1",
+            GroupType = Enums.TagGroupType.Folder,
+            ParentGroupId = plctest1.Id,
+        };
+        var plctest1F2 = new TagGroup
+        {
+            Name = "plctest1F2",
+            GroupType = Enums.TagGroupType.Folder,
+            ParentGroupId = plctest1F1.Id,
+        };
+         var plctest1F3 = new TagGroup
+        {
+            Name = "plctest1F3",
+            GroupType = Enums.TagGroupType.Folder,
+            ParentGroupId = plctest1F2.Id,
+        };
 
-        context.TagGroups.AddRange(plcGroup, hmiGroup, plctest1, plctest1v1);
+        context.TagGroups.AddRange(plcGroup, hmiGroup, plctest1, plctest1v1,plctest1F1, plctest1F2, plctest1F3);
 
         await context.SaveChangesAsync();
     }

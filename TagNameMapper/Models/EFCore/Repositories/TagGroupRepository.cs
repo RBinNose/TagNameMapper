@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using TagNameMapper.Models.EFCore.DbContexts;
 using TagNameMapper.Models.TableMetadatas;
 using TagNameMapper.Enums;
+using System.Collections.ObjectModel;
 
 namespace TagNameMapper.Models.EFCore.Repositories;
 
@@ -27,13 +28,15 @@ public class TagGroupRepository : Repository<TagGroup>, ITagGroupRepository
 
     public async Task<IEnumerable<TagGroup>> GetRootGroupsAsync()
     {
-        return await _dbSet
-            .Where(g => g.ParentGroupId == null)
-            .Include(g => g.ChildGroups)
-            .ThenInclude(c => c.ChildGroups)
-            .ThenInclude(c => c.ChildGroups)
-            .OrderBy(g => g.Name)
-            .ToListAsync();
+        var allGroups = await _dbSet.ToListAsync();
+        var groupLookup = allGroups.ToLookup(g => g.ParentGroupId);
+
+        foreach (var group in allGroups)
+        {
+           group.ChildGroups = new ObservableCollection<TagGroup>(groupLookup[group.Id].OrderBy(c => c.Name));
+        }
+
+        return groupLookup[null].OrderBy(g => g.Name).ToList();
     }
 
     public async Task<IEnumerable<TagGroup>> GetChildGroupsAsync(Guid parentId)
