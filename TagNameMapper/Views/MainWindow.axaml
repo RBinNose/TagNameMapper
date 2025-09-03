@@ -6,30 +6,73 @@
         x:Class="TagNameMapper.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico" >
 
-    <!--<Window.Resources>
-        <imaging:Bitmap x:Key="FolderIcon" Source="avares://Images/文件夹图标.png"/>
-        <imaging:Bitmap x:Key="TableIcon" Source="avares://Images/变量表图标.png"/>
-    </Window.Resources>-->
     <Window.Styles>
+         <!-- 使用深入选择器，直接修改模板内部元素的样式 -->
         <Style Selector="TreeViewItem">
             <Setter Property="Padding" Value="0"/>
             <Setter Property="MinHeight" Value="20"/>
-            <Setter Property="Margin" Value="0"/>
-            <Setter Property="Background" Value="#C0C0C0"/>
+            <Setter Property="Margin" Value="0"/>    
+            <Setter Property="Template">
+               <ControlTemplate>
+                 <StackPanel>
+                   <Border Name="PART_LayoutRoot"
+                           Classes="TreeViewItemLayoutRoot"
+                           Focusable="True"
+                           Background="{TemplateBinding Background}"
+                           BorderBrush="{TemplateBinding BorderBrush}"
+                           BorderThickness="{TemplateBinding BorderThickness}"
+                           CornerRadius="{TemplateBinding CornerRadius}"
+                           MinHeight="{TemplateBinding MinHeight}"
+                           TemplatedControl.IsTemplateFocusTarget="True">
+                     <Grid Name="PART_Header"
+                           ColumnDefinitions="Auto, *"
+                           Margin="{TemplateBinding Level, Mode=OneWay, Converter={StaticResource TreeViewItemLeftMarginConverter}}">
+                       <Panel Name="PART_ExpandCollapseChevronContainer"
+                              Margin="2,1,2,1">
+                         <ToggleButton Name="PART_ExpandCollapseChevron"
+                                       Theme="{StaticResource FluentTreeViewExpandCollapseChevron}"
+                                       Focusable="False"
+                                       IsChecked="{TemplateBinding IsExpanded, Mode=TwoWay}" />
+                       </Panel>
+                       <ContentPresenter Name="PART_HeaderPresenter"
+                                         Grid.Column="1"
+                                         Focusable="False"
+                                         Background="Transparent"
+                                         Content="{TemplateBinding Header}"
+                                         ContentTemplate="{TemplateBinding HeaderTemplate}"
+                                         HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                                         VerticalAlignment="{TemplateBinding VerticalAlignment}"
+                                         Margin="{TemplateBinding Padding}" />
+                     </Grid>
+                   </Border>
+                   <ItemsPresenter Name="PART_ItemsPresenter"
+                                   IsVisible="{TemplateBinding IsExpanded}"
+                                   ItemsPanel="{TemplateBinding ItemsPanel}" />
+                 </StackPanel>
+               </ControlTemplate>
+             </Setter>
         </Style>
-          <!-- 悬停样式 - 使用更具体的选择器 -->
-    <Style Selector="TreeView TreeViewItem:pointerover">
-        <Setter Property="Background" Value="LightBlue"/>
-    </Style>
-    
-    <!-- 选中样式 -->
-    <Style Selector="TreeView TreeViewItem:selected">
-        <Setter Property="Background" Value="CornflowerBlue"/>
-    </Style>
-    
-    <!-- 选中且悬停 -->
-    <Style Selector="TreeView TreeViewItem:selected:pointerover">
-        <Setter Property="Background" Value="DarkBlue"/>
+        <!-- 鼠标悬停浅蓝色 -->
+        <Style Selector="TreeViewItem /template/ Border:pointerover">
+            <Setter Property="Background" Value="LightBlue"/>
+        </Style>
+         
+        <Style Selector="TreeViewItem:selected /template/ Border">
+          <Setter Property="Background" Value="CornflowerBlue"/>
+          <Setter Property="BorderBrush" Value="DarkBlue"/>
+          <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+
+       <!-- 展开状态的图形 (ToggleButton.IsChecked = True) -->
+        <Style Selector="TreeViewItem /template/ ToggleButton#PART_ExpandCollapseChevron:checked /template/ Path">
+            <Setter Property="Data" Value="M 0 0 L 8 0 L 4 6 Z"/>
+            <Setter Property="Fill" Value="Black"/>
+        </Style>
+        
+        <!-- 折叠状态的图形 (ToggleButton.IsChecked = False) -->
+        <Style Selector="TreeViewItem /template/ ToggleButton#PART_ExpandCollapseChevron:not(:checked) /template/ Path">
+            <Setter Property="Data" Value="M 0 0 L 6 4 L 0 8 Z"/>
+            <Setter Property="Fill" Value="Black"/>
     </Style>
     </Window.Styles>
      <Window.Resources>
@@ -44,8 +87,8 @@
         </Grid.ColumnDefinitions>
         
         <!-- 左侧TreeView显示TagGroup -->
-        <TreeView Grid.Column="0" ItemsSource="{Binding TagGroups}" Margin="1" >
-            <TreeView.ItemTemplate>
+        <TreeView Grid.Column="0" ItemsSource="{Binding TagGroups}" Margin="1"  >
+            <TreeView.ItemTemplate>                
                 <TreeDataTemplate ItemsSource="{Binding ChildGroups}">
                     <StackPanel Orientation="Horizontal" Height="20">
                         <Image Margin="1,1,5,1">
@@ -65,7 +108,7 @@
         </TreeView>
         
         <!-- 右侧预留空间 -->
-        <Border Grid.Column="1" Background="LightGray" Margin="1">
+        <Border Grid.Column="1" Background="LightGray" Margin="1" BorderThickness="1" BorderBrush="Black" >
             <TextBlock Text="右侧内容区域" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </Border>
         <StackPanel Grid.Column="2">

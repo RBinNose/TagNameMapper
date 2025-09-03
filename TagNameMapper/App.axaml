@@ -6,9 +6,15 @@
              <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
 
 
-  
-    <Application.Styles>
+
+    <Application.Styles>    
         <FluentTheme />
         <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
     </Application.Styles>
+
+    <Application.Resources>
+        <Thickness x:Key="TreeViewItemExpandCollapseChevronMargin">10,5,10,5</Thickness>
+        <!-- 你也可以试试一个更夸张的值来确保看到了变化 -->
+        <!-- <Thickness x:Key="TreeViewItemExpandCollapseChevronMargin">50,20,0,0</Thickness> -->
+    </Application.Resources>
 </Application>
