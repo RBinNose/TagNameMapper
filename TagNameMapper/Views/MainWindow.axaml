@@ -11,10 +11,18 @@
         <Style Selector="TreeViewItem">
             <Setter Property="Padding" Value="0"/>
             <Setter Property="MinHeight" Value="20"/>
-            <Setter Property="Margin" Value="0"/>    
+            <Setter Property="Margin" Value="0"/>
             <Setter Property="Template">
                <ControlTemplate>
-                 <StackPanel>
+                 <StackPanel>    
+                   <StackPanel.ContextMenu>
+                     <ContextMenu>
+                        <MenuItem Header="添加变量表" 
+                                Command="{Binding $parent[TreeView].DataContext.AddVariableTableCommand}"/>
+                        <MenuItem Header="新增组" 
+                                Command="{Binding $parent[TreeView].DataContext.AddGroupCommand}"/>
+                     </ContextMenu>
+                    </StackPanel.ContextMenu>            
                    <Border Name="PART_LayoutRoot"
                            Classes="TreeViewItemLayoutRoot"
                            Focusable="True"
@@ -75,7 +83,7 @@
             <Setter Property="Fill" Value="Black"/>
         </Style>
     </Window.Styles>
-     <Window.Resources>
+     <Window.Resources>       
         <Bitmap x:Key="FolderIcon">avares://TagNameMapper/Images/文件夹图标.png</Bitmap>
         <Bitmap x:Key="TableIcon">avares://TagNameMapper/Images/变量表图标.png</Bitmap>
     </Window.Resources>
@@ -83,11 +91,14 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="300"/>
             <ColumnDefinition Width="*"/>
-             <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="100"/>
         </Grid.ColumnDefinitions>
         
         <!-- 左侧TreeView显示TagGroup -->
-        <TreeView Grid.Column="0" ItemsSource="{Binding TagGroups}" Margin="1"  >
+        <TreeView Grid.Column="0" 
+                  ItemsSource="{Binding TagGroups}" 
+                  Margin="1"
+                  SelectedItem="{Binding SelectedTagGroup}">
             <TreeView.ItemTemplate>                
                 <TreeDataTemplate ItemsSource="{Binding ChildGroups}">
                     <StackPanel Orientation="Horizontal" Height="20">
@@ -108,13 +119,13 @@
         </TreeView>
         
         <!-- 右侧预留空间 -->
-        <Border Grid.Column="1" Background="LightGray" Margin="1" BorderThickness="1" BorderBrush="Black" >
+        <Border Grid.Column="1"  Background="LightGray" Margin="1" BorderThickness="1" BorderBrush="Black" >
             <TextBlock Text="右侧内容区域" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </Border>
-        <StackPanel Grid.Column="2">
-            <Button Content="test" Command="{Binding LoadDataCommand}" Margin="1" Height="100" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
-          
+        <StackPanel Grid.Column="2" >
+            <Button Content="test" Command="{Binding LoadDataCommand}" Margin="1" Height="100" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />       
         </StackPanel>
+
     </Grid>
 
 </Window>

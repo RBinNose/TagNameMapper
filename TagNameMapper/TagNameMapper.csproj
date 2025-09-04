@@ -27,6 +27,8 @@
     <PackageReference Include="HotAvalonia" Version="3.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.8" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.8" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.8" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.8" />
   </ItemGroup>
   <ItemGroup>
   <None Update="Data\DataBase.sqlite">
@@ -39,6 +41,7 @@
     <AvaloniaResource Include="Images\文件夹图标.png" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Behaviors\" />
     <Folder Include="Data\" />
     <Folder Include="Models\EFCore\DbContexts\" />
   </ItemGroup>

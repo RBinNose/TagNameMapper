@@ -6,11 +6,11 @@ using Avalonia.Markup.Xaml;
 using TagNameMapper.Views;
 using TagNameMapper.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using TagNameMapper.Models.EFCore.Extensions;
 using System;
 using System.Threading.Tasks;
 using System.Text;
-
 namespace TagNameMapper;
 
 public partial class App : Application
@@ -36,6 +36,16 @@ public partial class App : Application
     {
         var services = new ServiceCollection();
         
+        // 注册日志服务
+        services.AddLogging(builder =>
+        {
+            //输出到控制台
+            builder.AddConsole();
+
+            builder.SetMinimumLevel(LogLevel.Information); // 设置最小日志级别
+        });
+
+        
         // 注册数据访问层服务（使用默认连接字符串）
         services.AddDataAccessServices();
         
@@ -54,8 +64,9 @@ public partial class App : Application
             }
             catch (Exception ex)
             {
-                // 记录错误或处理异常
-                Console.WriteLine($"数据库初始化失败: {ex.Message}");
+                // 使用日志记录错误或处理异常
+                var logger = _serviceProvider.GetService<ILogger<App>>();
+                logger?.LogError(ex, "数据库初始化失败: {Message}", ex.Message);
             }
         });
     }
