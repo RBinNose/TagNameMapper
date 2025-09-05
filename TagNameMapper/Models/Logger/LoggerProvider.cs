@@ -11,15 +11,15 @@ public class LoggerProvider : ILoggerProvider
     private bool _disposed = false;
 
     //日志信息存储位置
-    private LimitedObservableCollection<string> _logMessages;
-    public LimitedObservableCollection<string> LogMessages
+    private LimitedObservableCollection<string>? _logMessages;
+    public LimitedObservableCollection<string>? LogMessages
     {
         get { return _logMessages; }
     }
     //构造函数
     public LoggerProvider()
     {
-        _logMessages=new LimitedObservableCollection<string>(1000,100);
+        _logMessages=new LimitedObservableCollection<string>(1000,10);
     }
 
     /// <summary>
@@ -45,12 +45,8 @@ public class LoggerProvider : ILoggerProvider
     {
         if (!_disposed)
         {
-      
-            // 清理其他资源（如果有）
-            // 比如 Logger 资源清理，如果 Logger 实现了 IDisposable，调用其 Dispose
-            // _logger?.Dispose();
-
-            // 标记为已清理
+            if (_logMessages != null) { _logMessages.Clear(); }
+            _logMessages = null;
             _disposed = true;
         }
     }

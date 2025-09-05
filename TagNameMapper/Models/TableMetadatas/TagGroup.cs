@@ -20,6 +20,11 @@ public partial class TagGroup : ObservableObject
     [property: Required(ErrorMessage = "Group Name is required")]
     private string _name = string.Empty;
 
+    // 编辑状态属性 - 简化版本
+    [ObservableProperty]
+    [property: NotMapped]
+    private bool _isEditing;
+
     [ObservableProperty]
     private Guid? _parentGroupId;
 

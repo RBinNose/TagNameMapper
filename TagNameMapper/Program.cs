@@ -15,7 +15,7 @@ sealed class Program
         // 设置控制台编码，解决中文乱码问题
         Console.OutputEncoding = Encoding.UTF8;
         Console.InputEncoding = Encoding.UTF8;
-        
+
         BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
     }
 
@@ -25,4 +25,5 @@ sealed class Program
             .UsePlatformDetect()
             .WithInterFont()
             .LogToTrace();
+
 }

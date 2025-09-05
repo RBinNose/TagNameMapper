@@ -11,6 +11,7 @@ using TagNameMapper.Models.EFCore.Extensions;
 using System;
 using System.Threading.Tasks;
 using System.Text;
+using TagNameMapper.Models.Logger;
 namespace TagNameMapper;
 
 public partial class App : Application
@@ -20,8 +21,8 @@ public partial class App : Application
     public override void Initialize()
     {
         // 设置控制台编码为UTF-8，解决中文乱码
-        Console.OutputEncoding = Encoding.UTF8;
-        Console.InputEncoding = Encoding.UTF8;
+      //  Console.OutputEncoding = Encoding.UTF8;
+      //  Console.InputEncoding = Encoding.UTF8;
         
         AvaloniaXamlLoader.Load(this);
         
@@ -35,17 +36,19 @@ public partial class App : Application
     private void ConfigureServices()
     {
         var services = new ServiceCollection();
-        
+        // 创建自定义日志提供者实例
+        var customLoggerProvider = new LoggerProvider();
         // 注册日志服务
         services.AddLogging(builder =>
         {
             //输出到控制台
             builder.AddConsole();
-
+            builder.AddProvider(customLoggerProvider); 
             builder.SetMinimumLevel(LogLevel.Information); // 设置最小日志级别
         });
 
-        
+        // 将LoggerProvider实例注册为单例，以便MainWindowViewModel可以注入
+        services.AddSingleton(customLoggerProvider);
         // 注册数据访问层服务（使用默认连接字符串）
         services.AddDataAccessServices();
         
